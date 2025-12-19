@@ -1,13 +1,13 @@
-
-
 async function searchMovie() {
     const movieName = document.getElementById("searchInput").value;
+    const resultDiv = document.getElementById("result");
 
     if (movieName === "") {
-        document.getElementById("result").innerText =
-            "Please enter a movie name";
+        resultDiv.innerText = "Please enter a movie name";
         return;
     }
+
+    resultDiv.innerText = "Loading...";
 
     try {
         const response = await fetch(
@@ -16,10 +16,18 @@ async function searchMovie() {
 
         const data = await response.json();
 
-        document.getElementById("result").innerText = data.message;
+        if (data.error) {
+            resultDiv.innerText = data.error;
+            return;
+        }
 
+        resultDiv.innerHTML = `
+            <h2>${data.title}</h2>
+            <img src="${data.poster}" width="200" />
+            <p><strong>Rating:</strong> ${data.rating}</p>
+            <p>${data.overview}</p>
+        `;
     } catch (error) {
-        document.getElementById("result").innerText =
-            "Error connecting to backend";
+        resultDiv.innerText = "Failed to fetch data";
     }
 }
