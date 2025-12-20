@@ -7,7 +7,7 @@ async function searchMovie() {
         return;
     }
 
-    resultDiv.innerText = "Loading...";
+    resultDiv.innerHTML = "<p>Loading...</p>";
 
     try {
         const response = await fetch(
@@ -23,10 +23,16 @@ async function searchMovie() {
 
         resultDiv.innerHTML = `
             <h2>${data.title}</h2>
-            <img src="${data.poster}" width="200" />
-            <p><strong>Rating:</strong> ${data.rating}</p>
-            <p>${data.overview}</p>
+
+            <img src="${data.poster}" width="220" style="margin:15px 0"/>
+
+            <p><strong>Overview:</strong><br>${data.overview}</p>
+
+            <p><strong>TMDb Rating:</strong> ⭐ ${data.tmdbRating}</p>
+            <p><strong>IMDb Rating:</strong> ⭐ ${data.imdbRating}</p>
+            <p><strong>Rotten Tomatoes:</strong> 🍅 ${data.rottenRating}</p>
         `;
+
     } catch (error) {
         resultDiv.innerText = "Failed to fetch data";
     }
