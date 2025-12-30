@@ -22,16 +22,30 @@ async function searchMovie() {
         }
 
         resultDiv.innerHTML = `
-            <h2>${data.title}</h2>
+    <div class="card">
+        <h2>${data.title}</h2>
 
-            <img src="${data.poster}" width="220" style="margin:15px 0"/>
+        <img src="${data.poster}" width="240" />
 
-            <p><strong>Overview:</strong><br>${data.overview}</p>
+        <p class="overview">${data.overview}</p>
 
-            <p><strong>TMDb Rating:</strong> ⭐ ${data.tmdbRating}</p>
-            <p><strong>IMDb Rating:</strong> ⭐ ${data.imdbRating}</p>
-            <p><strong>Rotten Tomatoes:</strong> 🍅 ${data.rottenRating}</p>
-        `;
+        <div class="ratings">
+            <div class="rating-box">
+                <p>TMDb</p>
+                <strong>⭐ ${data.tmdbRating}</strong>
+            </div>
+            <div class="rating-box">
+                <p>IMDb</p>
+                <strong>⭐ ${data.imdbRating}</strong>
+            </div>
+            <div class="rating-box">
+                <p>Rotten Tomatoes</p>
+                <strong>🍅 ${data.rottenRating}</strong>
+            </div>
+        </div>
+    </div>
+`;
+
 
     } catch (error) {
         resultDiv.innerText = "Failed to fetch data";

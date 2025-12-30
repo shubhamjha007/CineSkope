@@ -6,16 +6,19 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
+        <h1>🎬 CineSkope</h1>
+        <p class="subtitle">Compare movie ratings across platforms</p>
 
-    <h1>🎬 CineSkope</h1>
-    <p>Search a movie or TV show to see ratings</p>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Enter movie name">
+            <button onclick="searchMovie()">Search</button>
+        </div>
 
-    <input type="text" id="searchInput" placeholder="Enter movie name">
-    <button onclick="searchMovie()">Search</button>
+        <div id="result"></div>
+    </div>
 
-<div id="result"></div>
-
-<script src="script.js"></script>
-
+    <script src="script.js"></script>
 </body>
+
 </html>
