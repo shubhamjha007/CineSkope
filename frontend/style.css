@@ -1,25 +1,397 @@
+/* ============================================
+   CineSkope — design tokens
+   ============================================ */
+:root {
+    --ink: #19140f;          /* cinema-dark background */
+    --ink-soft: #2a2118;     /* secondary dark surface */
+    --paper: #f1e9da;        /* ticket / card paper */
+    --paper-dim: #e3d8c2;    /* paper shadow / divider */
+    --marquee: #e8a33d;      /* marquee bulb gold */
+    --ticket-red: #c1432a;   /* stub red accent */
+    --cream: #ede6d6;        /* body text on dark */
+
+    --font-display: "Fraunces", serif;
+    --font-body: "Public Sans", -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
 body {
-    background-color: #121212;
-    color: white;
-    font-family: Arial, sans-serif;
+    margin: 0;
+    background: var(--ink);
+    background-image:
+        radial-gradient(ellipse at top, rgba(232, 163, 61, 0.08), transparent 60%);
+    color: var(--cream);
+    font-family: var(--font-body);
+    min-height: 100vh;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+}
+
+.marquee-frame {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 72px 24px 96px;
+}
+
+/* ============================================
+   Hero
+   ============================================ */
+.hero {
     text-align: center;
-    margin-top: 80px;
 }
 
-input {
-    padding: 10px;
-    width: 250px;
-    font-size: 16px;
+.eyebrow {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--marquee);
+    margin: 0 0 8px;
 }
 
-button {
-    padding: 10px 20px;
+.title {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-size: clamp(48px, 10vw, 88px);
+    margin: 0;
+    letter-spacing: -0.01em;
+    color: var(--paper);
+}
+
+/* Signature element: marquee bulbs. Reused at small scale for the
+   loading state, so the "lights" motif carries through the whole flow. */
+.bulbs {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin: 22px 0 18px;
+}
+
+.bulbs span {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--paper-dim);
+    box-shadow: 0 0 0 rgba(232, 163, 61, 0);
+    animation: glow 2.8s ease-in-out infinite;
+}
+
+.bulbs span:nth-child(odd) { animation-delay: 0.4s; }
+.bulbs span:nth-child(3n) { animation-delay: 0.9s; }
+.bulbs span:nth-child(5) { animation-delay: 1.3s; }
+
+@keyframes glow {
+    0%, 100% {
+        background: var(--paper-dim);
+        box-shadow: 0 0 0 rgba(232, 163, 61, 0);
+    }
+    50% {
+        background: var(--marquee);
+        box-shadow: 0 0 10px 2px rgba(232, 163, 61, 0.55);
+    }
+}
+
+.bulbs.small span {
+    width: 6px;
+    height: 6px;
+}
+
+.bulbs.chasing span {
+    animation: glow 1s ease-in-out infinite;
+}
+
+.tagline {
     font-size: 16px;
+    color: var(--paper-dim);
+    margin: 0 0 36px;
+}
+
+/* ============================================
+   Search bar — styled like a marquee letter slot
+   ============================================ */
+.search-bar {
+    display: flex;
+    gap: 10px;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.search-input-wrap {
+    position: relative;
+    flex: 1;
+    text-align: left;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 16px 18px;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--cream);
+    background: var(--ink-soft);
+    border: 1px solid rgba(241, 233, 218, 0.14);
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#searchInput::placeholder {
+    color: rgba(237, 230, 214, 0.4);
+}
+
+#searchInput:focus-visible {
+    border-color: var(--marquee);
+    box-shadow: 0 0 0 3px rgba(232, 163, 61, 0.25);
+}
+
+/* Search-as-you-type results, styled like a short row of marquee
+   listings rather than a generic browser autocomplete box. */
+.suggestions {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 6px;
+    list-style: none;
+    background: var(--ink-soft);
+    border: 1px solid rgba(241, 233, 218, 0.14);
+    border-radius: 6px;
+    max-height: 320px;
+    overflow-y: auto;
+    z-index: 20;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 4px;
     cursor: pointer;
-    margin-left: 10px;
 }
 
-#result {
-    margin-top: 30px;
-    font-size: 18px;
+.suggestion-item:hover,
+.suggestion-item.is-active {
+    background: rgba(232, 163, 61, 0.14);
+}
+
+.suggestion-poster {
+    width: 32px;
+    height: 46px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 3px;
+    background: var(--paper-dim);
+}
+
+.suggestion-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.suggestion-title {
+    font-size: 14px;
+    color: var(--cream);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.suggestion-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--paper-dim);
+}
+
+.ticket-btn {
+    padding: 16px 26px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--marquee);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.ticket-btn:hover {
+    background: #f0b65c;
+}
+
+.ticket-btn:active {
+    transform: scale(0.97);
+}
+
+.ticket-btn:focus-visible {
+    outline: 2px solid var(--cream);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   Result area — status lines
+   ============================================ */
+.result {
+    margin-top: 64px;
+}
+
+.status-line {
+    text-align: center;
+    color: var(--paper-dim);
+    font-size: 15px;
+    margin: 0;
+}
+
+.status-line.is-error {
+    color: var(--ticket-red);
+}
+
+/* ============================================
+   Combined score card — the "marquee number"
+   ============================================ */
+.score-card {
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 10px;
+    padding: 36px 28px 28px;
+    text-align: center;
+    animation: rise 0.35s ease;
+}
+
+@keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.poster {
+    width: 110px;
+    height: 165px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin: 0 auto 18px;
+    display: block;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.stub-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 26px;
+    margin: 0 0 2px;
+}
+
+.stub-sub {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #6b5f4e;
+    margin: 0 0 18px;
+}
+
+.combined-score {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    line-height: 1;
+}
+
+.score-num {
+    font-size: 72px;
+    color: var(--ticket-red);
+}
+
+.score-max {
+    font-size: 26px;
+    color: #6b5f4e;
+}
+
+/* Perforated tear between the combined score and the per-source stubs */
+.perforation {
+    height: 2px;
+    margin: 28px 0 0;
+    background-image: radial-gradient(circle, var(--ink) 3px, transparent 3.5px);
+    background-size: 16px 2px;
+    background-repeat: repeat-x;
+    background-position: center;
+}
+
+/* ============================================
+   Per-source ticket stubs
+   ============================================ */
+.sources-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.source-stub {
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 0 0 8px 8px;
+    padding: 16px 14px 18px;
+    text-align: center;
+    position: relative;
+}
+
+.source-name {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6b5f4e;
+    margin: 0 0 8px;
+}
+
+.source-score {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--ink);
+    margin: 0;
+}
+
+.source-raw {
+    font-size: 11px;
+    color: #847557;
+    margin: 4px 0 0;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 520px) {
+    .search-bar {
+        flex-direction: column;
+    }
+
+    .score-num {
+        font-size: 56px;
+    }
 }

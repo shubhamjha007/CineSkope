@@ -1,17 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>   
+<head>
     <meta charset="UTF-8">
-    <title>CineSkope</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CineSkope — every critic, one score</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>🎬 CineSkope</h1>
-    <p>Search a movie or TV show to see ratings</p>
+    <div class="marquee-frame">
 
-    <input type="text" id="searchInput" placeholder="Enter movie name">
-    <button>Search</button>
+        <header class="hero">
+            <p class="eyebrow">Now showing</p>
+            <h1 class="title">CineSkope</h1>
 
+            <div class="bulbs" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+
+            <p class="tagline">One score, pulled from every critic in the house.</p>
+
+            <form class="search-bar" id="searchForm">
+                <div class="search-input-wrap">
+                    <label for="searchInput" class="visually-hidden">Movie or show title</label>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search a movie or show"
+                        autocomplete="off"
+                        role="combobox"
+                        aria-expanded="false"
+                        aria-controls="suggestions"
+                    >
+                    <ul class="suggestions" id="suggestions" role="listbox" hidden></ul>
+                </div>
+                <button type="submit" class="ticket-btn">
+                    <span>Search</span>
+                </button>
+            </form>
+        </header>
+
+        <main id="result" class="result" aria-live="polite">
+            <p class="status-line">No film loaded yet. Search a title above to start the show.</p>
+        </main>
+
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
