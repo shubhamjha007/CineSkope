@@ -34,7 +34,10 @@ body {
         radial-gradient(ellipse at top, rgba(232, 163, 61, 0.08), transparent 60%);
     color: var(--cream);
     font-family: var(--font-body);
+
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .visually-hidden {
@@ -46,6 +49,8 @@ body {
 }
 
 .marquee-frame {
+    flex: 1;
+
     max-width: 760px;
     margin: 0 auto;
     padding: 72px 24px 96px;
@@ -75,6 +80,7 @@ body {
     margin: 0;
     letter-spacing: -0.01em;
     color: var(--paper);
+    animation: fadeIn 1.2s ease-out;
 }
 
 /* Signature element: marquee bulbs. Reused at small scale for the
@@ -107,6 +113,18 @@ body {
     50% {
         background: var(--marquee);
         box-shadow: 0 0 10px 2px rgba(232, 163, 61, 0.55);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
@@ -290,15 +308,22 @@ body {
 }
 
 .poster {
-    width: 110px;
-    height: 165px;
+    width: 180px;
+    height: auto;
+    aspect-ratio: 2 / 3;
     object-fit: cover;
-    border-radius: 6px;
-    margin: 0 auto 18px;
+    border-radius: 8px;
+    margin: 0 auto 22px;
     display: block;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+    transition:.35s ease;
 }
 
+.poster:hover{
+
+transform:scale(1.03);
+
+}
 .stub-title {
     font-family: var(--font-display);
     font-weight: 600;
@@ -351,13 +376,26 @@ body {
     margin-top: 16px;
 }
 
-.source-stub {
-    background: var(--paper);
-    color: var(--ink);
-    border-radius: 0 0 8px 8px;
-    padding: 16px 14px 18px;
-    text-align: center;
-    position: relative;
+.source-stub{
+
+background:var(--paper);
+
+color:var(--ink);
+
+border-radius:10px;
+
+padding:18px;
+
+transition:.25s ease;
+
+}
+
+.source-stub:hover{
+
+transform:translateY(-5px);
+
+box-shadow:0 12px 24px rgba(0,0,0,.18);
+
 }
 
 .source-name {
@@ -386,12 +424,294 @@ body {
 /* ============================================
    Responsive
    ============================================ */
+/* ============================================
+   Tablet
+   ============================================ */
+@media (max-width: 768px) {
+
+    .marquee-frame {
+        padding: 48px 20px 72px;
+    }
+
+    .title {
+        font-size: 56px;
+    }
+
+    .poster {
+        width: 170px;
+        height: auto;
+    }
+
+    .score-card {
+        padding: 28px 20px;
+    }
+
+    .sources-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .details-panel {
+        padding: 24px 20px;
+    }
+
+}
+
+/* ============================================
+   Mobile
+   ============================================ */
 @media (max-width: 520px) {
+
+    .marquee-frame {
+        padding: 36px 16px 60px;
+    }
+
+    .title {
+        font-size: 42px;
+    }
+
+    .tagline {
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 28px;
+    }
+
     .search-bar {
         flex-direction: column;
     }
 
-    .score-num {
-        font-size: 56px;
+    .ticket-btn {
+        width: 100%;
     }
+
+    #searchInput {
+        font-size: 14px;
+    }
+
+    .poster {
+        width: 150px;
+    }
+
+    .score-num {
+        font-size: 54px;
+    }
+
+    .sources-row {
+        grid-template-columns: 1fr;
+    }
+
+    .details-meta {
+        justify-content: center;
+    }
+
+    .details-row {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .suggestions {
+        max-height: 250px;
+    }
+
+    .suggestion-item {
+        padding: 10px;
+    }
+
+    .suggestion-poster {
+        width: 28px;
+        height: 40px;
+    }
+
+    .details-panel{
+
+padding:20px;
+
+}
+
+.detail-section h3{
+
+font-size:18px;
+
+}
+
+.details-tag{
+
+font-size:12px;
+
+padding:6px 12px;
+
+}
+}
+/* ============================================
+   Score Labels
+   ============================================ */
+
+.score-stars {
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--marquee);
+    margin: 12px 0 6px;
+}
+
+.score-label {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    color: #6b5f4e;
+    margin: 0;
+}
+
+/* ============================================
+   Empty State
+   ============================================ */
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--paper-dim);
+}
+
+.empty-state h2 {
+    font-family: var(--font-display);
+    margin-bottom: 12px;
+    color: var(--paper);
+}
+
+.empty-state p {
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.footer {
+    border-top: 1px solid rgba(241, 233, 218, 0.08);
+    padding: 16px 20px;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(237, 230, 214, 0.55);
+}
+
+.footer p {
+    margin: 0;
+}
+
+/* ============================================
+   Movie Details
+   ============================================ */
+
+.details-panel {
+
+    margin-top: 30px;
+
+    background: var(--paper);
+
+    color: var(--ink);
+
+    border-radius: 10px;
+
+    padding: 28px;
+
+    box-shadow: 0 10px 24px rgba(0,0,0,.25);
+
+}
+
+.detail-section {
+
+    margin-bottom: 28px;
+
+}
+
+.detail-section:last-child {
+
+    margin-bottom: 0;
+
+}
+
+.detail-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin: 0 0 14px;
+    padding-bottom: 8px;
+
+    font-family: var(--font-display);
+    font-size: 21px;
+    color: var(--ticket-red);
+
+    border-bottom: 1px solid rgba(25, 20, 15, 0.08);
+}
+
+.details-plot {
+    line-height: 1.9;
+    color: #4b4339;
+    font-size: 15px;
+    text-align: justify;
+}
+
+.details-meta {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+}
+
+.details-tag {
+    background: rgba(193, 67, 42, 0.08);
+    color: var(--ticket-red);
+
+    border: 1px solid rgba(193, 67, 42, 0.15);
+
+    padding: 8px 14px;
+
+    border-radius: 999px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    transition: all .2s ease;
+}
+
+.details-tag:hover {
+    background: var(--ticket-red);
+    color: var(--paper);
+}
+
+.detail-section p {
+
+    margin: 0;
+
+    line-height: 1.7;
+
+    color: #5d5347;
+
+}
+
+/* Rating Card Colors */
+
+.source-stub.imdb{
+
+border-top:5px solid #f5c518;
+
+}
+
+.source-stub.tmdb{
+
+border-top:5px solid #01b4e4;
+
+}
+
+.source-stub.rotten{
+
+border-top:5px solid #fa320a;
+
+}
+
+.source-stub.meta{
+
+border-top:5px solid #66cc33;
+
 }

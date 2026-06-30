@@ -25,8 +25,8 @@
    while you update the API.
    ============================================ */
 
-const BACKEND_URL = "http://localhost:5000/movie";
-const SUGGEST_URL = "http://localhost:5000/suggest";
+const BACKEND_URL = "/movie";
+const SUGGEST_URL = "/suggest";
 const DEBOUNCE_MS = 300;
 
 const form = document.getElementById("searchForm");
@@ -207,6 +207,7 @@ function renderResult(data) {
 
     const title = escapeHtml(data.title || input.value.trim());
     const combined = formatScore(data.combined);
+    const scoreInfo = getScoreLabel(data.combined);
     const sources = Array.isArray(data.sources) ? data.sources : [];
     const posterUrl = data.poster || "";
     const kindLabel = data.type === "tv" ? "Show" : "Movie";
@@ -216,7 +217,7 @@ function renderResult(data) {
         const outOf = source.outOf || 10;
         const normalized = formatScore(toTen(source.score, outOf));
         return `
-            <div class="source-stub">
+            <div class="source-stub ${getSourceClass(source.name)}">
                 <p class="source-name">${name}</p>
                 <p class="source-score">${normalized}</p>
                 <p class="source-raw">${escapeHtml(String(source.score))}/${outOf}</p>
@@ -230,8 +231,12 @@ function renderResult(data) {
             <p class="stub-title">${title}</p>
             <p class="stub-sub">${kindLabel} · combined score</p>
             <div class="combined-score">
-                <span class="score-num">${combined}</span><span class="score-max">/10</span>
+                <span class="score-num">${combined}</span>
+                <span class="score-max">/10</span>
             </div>
+
+            <p class="score-stars">${scoreInfo.stars}</p>
+            <p class="score-label">${scoreInfo.text}</p>
         </article>
         <div class="perforation" aria-hidden="true"></div>
         <div class="sources-row">
@@ -244,25 +249,79 @@ function renderResult(data) {
 function renderDetails(details) {
     if (!details) return "";
 
-    const tags = [details.year, details.runtime, details.rated, details.genre]
-        .filter(Boolean)
-        .map((tag) => `<span class="details-tag">${escapeHtml(tag)}</span>`)
-        .join("");
-
-    const rows = [
-        details.director ? `<p class="details-row"><strong>Director:</strong> ${escapeHtml(details.director)}</p>` : "",
-        details.cast ? `<p class="details-row"><strong>Cast:</strong> ${escapeHtml(details.cast)}</p>` : "",
-        details.awards ? `<p class="details-row"><strong>Awards:</strong> ${escapeHtml(details.awards)}</p>` : ""
-    ].join("");
-
-    if (!details.overview && !tags && !rows) return "";
+    const tags = [
+        details.year,
+        details.runtime,
+        details.rated,
+        details.genre
+    ]
+    .filter(Boolean)
+    .map(tag => `<span class="details-tag">${escapeHtml(tag)}</span>`)
+    .join("");
 
     return `
-        <div class="details-panel">
-            ${details.overview ? `<p class="details-plot">${escapeHtml(details.overview)}</p>` : ""}
-            ${tags ? `<div class="details-meta">${tags}</div>` : ""}
-            ${rows}
-        </div>
+        <section class="details-panel">
+
+            ${
+                details.overview
+                ? `
+                <div class="detail-section">
+                    <h3>📖 Overview</h3>
+                    <p class="details-plot">
+                        ${escapeHtml(details.overview)}
+                    </p>
+                </div>
+                `
+                : ""
+            }
+
+            ${
+                tags
+                ? `
+                <div class="detail-section">
+                    <h3>🎞 At a Glance</h3>
+                    <div class="details-meta">
+                        ${tags}
+                    </div>
+                </div>
+                `
+                : ""
+            }
+
+            ${
+                details.director
+                ? `
+                <div class="detail-section">
+                    <h3>🎬 Director</h3>
+                    <p>${escapeHtml(details.director)}</p>
+                </div>
+                `
+                : ""
+            }
+
+            ${
+                details.cast
+                ? `
+                <div class="detail-section">
+                    <h3>🎭 Cast</h3>
+                    <p>${escapeHtml(details.cast)}</p>
+                </div>
+                `
+                : ""
+            }
+
+            ${
+                details.awards
+                ? `
+                <div class="detail-section">
+                    <h3>🏆 Awards</h3>
+                    <p>${escapeHtml(details.awards)}</p>
+                </div>
+                `
+                : ""
+            }
+
+        </section>
     `;
 }
 
@@ -277,6 +336,73 @@ function formatScore(value) {
         return "—";
     }
     return Number(value).toFixed(1);
+}
+
+function getScoreLabel(score) {
+    score = Number(score);
+
+    if (Number.isNaN(score)) {
+        return {
+            stars: "☆☆☆☆☆",
+            text: "No Rating"
+        };
+    }
+
+    if (score >= 9) {
+        return {
+            stars: "★★★★★",
+            text: "Masterpiece"
+        };
+    }
+
+    if (score >= 8) {
+        return {
+            stars: "★★★★☆",
+            text: "Excellent"
+        };
+    }
+
+    if (score >= 7) {
+        return {
+            stars: "★★★☆☆",
+            text: "Good"
+        };
+    }
+
+    if (score >= 6) {
+        return {
+            stars: "★★☆☆☆",
+            text: "Average"
+        };
+    }
+
+    return {
+        stars: "★☆☆☆☆",
+        text: "Below Average"
+    };
+}
+
+function getSourceClass(name){
+
+    switch(name){
+
+        case "IMDb":
+            return "imdb";
+
+        case "TMDb":
+            return "tmdb";
+
+        case "Rotten Tomatoes":
+            return "rotten";
+
+        case "Metacritic":
+            return "meta";
+
+        default:
+            return "";
+
+    }
+
 }
 
 function escapeHtml(str) {

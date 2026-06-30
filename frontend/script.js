@@ -207,6 +207,7 @@ function renderResult(data) {
 
     const title = escapeHtml(data.title || input.value.trim());
     const combined = formatScore(data.combined);
+    const scoreInfo = getScoreLabel(data.combined);
     const sources = Array.isArray(data.sources) ? data.sources : [];
     const posterUrl = data.poster || "";
     const kindLabel = data.type === "tv" ? "Show" : "Movie";
@@ -230,8 +231,12 @@ function renderResult(data) {
             <p class="stub-title">${title}</p>
             <p class="stub-sub">${kindLabel} · combined score</p>
             <div class="combined-score">
-                <span class="score-num">${combined}</span><span class="score-max">/10</span>
+                <span class="score-num">${combined}</span>
+                <span class="score-max">/10</span>
             </div>
+
+            <p class="score-stars">${scoreInfo.stars}</p>
+            <p class="score-label">${scoreInfo.text}</p>
         </article>
         <div class="perforation" aria-hidden="true"></div>
         <div class="sources-row">
@@ -277,6 +282,50 @@ function formatScore(value) {
         return "—";
     }
     return Number(value).toFixed(1);
+}
+
+function getScoreLabel(score) {
+    score = Number(score);
+
+    if (Number.isNaN(score)) {
+        return {
+            stars: "☆☆☆☆☆",
+            text: "No Rating"
+        };
+    }
+
+    if (score >= 9) {
+        return {
+            stars: "★★★★★",
+            text: "Masterpiece"
+        };
+    }
+
+    if (score >= 8) {
+        return {
+            stars: "★★★★☆",
+            text: "Excellent"
+        };
+    }
+
+    if (score >= 7) {
+        return {
+            stars: "★★★☆☆",
+            text: "Good"
+        };
+    }
+
+    if (score >= 6) {
+        return {
+            stars: "★★☆☆☆",
+            text: "Average"
+        };
+    }
+
+    return {
+        stars: "★☆☆☆☆",
+        text: "Below Average"
+    };
 }
 
 function escapeHtml(str) {
